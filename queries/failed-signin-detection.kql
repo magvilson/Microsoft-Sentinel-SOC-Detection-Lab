@@ -1,0 +1,15 @@
+SigninLogs
+| where ResultType != 0
+| summarize
+    FailedAttempts=count(),
+    FirstAttempt=min(TimeGenerated),
+    LastAttempt=max(TimeGenerated)
+    by UserPrincipalName, IPAddress
+| where FailedAttempts >= 3
+| project
+    TimeGenerated=LastAttempt,
+    UserPrincipalName,
+    IPAddress,
+    FailedAttempts,
+    FirstAttempt,
+    LastAttempt
